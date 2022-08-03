@@ -1,0 +1,48 @@
+---
+title: "Crafting Feedback"
+---
+
+You've seen some examples of feedback on student work - now, it's your turn! Imagine you asked to provide feedback on the following piece of work:
+
+::: {}
+```{r, echo=FALSE, out.extra='style= padding:10px;'}
+knitr::include_graphics("Poster1.png")
+```
+:::
+
+Now, drag and drop some feedback! Once you are happy with your creation, take a screenshot of the third column and submit it to this link: X.
+
+```{r echo=FALSE}
+library(sortable)
+library(htmltools)
+bucket_list(
+    header = "Drag options from the first two columns into the third and craft some feedback!",
+    add_rank_list(
+      text = "First of all, drag at least one from here...",
+      labels = c("Nice work.", 
+                 "I really appreciate how you gave a fun example.",
+                 "I like how you layed out your poster in clear sections using boxes.",
+                 "I liked your title.",
+                 "Your content is accurate.",
+                 "I noticed you used blue to highlight key words and focus the readers' attention")
+    ),
+    add_rank_list(
+      text = "...and at least one from here!",
+      labels = c("Your colours are plain and boring.", 
+                 "There's too much information, too much to read.", 
+                 "The text is too small.", 
+                 "I like your use of blue but also wonder if other colours would help draw the audience's attention?",
+                 "I appreciate all of the knowledge you have shared but feel a more directed focus would have portrayed your point more impactfully.", 
+                 "I wonder if you could have focused on your activity and reduced the written content as I feel the activity is a real strength of your poster.", 
+                 "None.", 
+                 "Randomness isn't an issue and you should have picked a better topic.", 
+                 "Have you actually proofread your poster? Error check!",
+                 "I totally get you have a lot to say and I can see you are really passionate about this topic, but as someone new to these ideas, the wealth of information is a little overwhelming. Have you considered including a link to more information?")
+    ),
+    add_rank_list(
+      text = "Have a go! Create your feedback here:",
+      labels = NULL
+    )
+  )
+```
+
