@@ -6,7 +6,7 @@ You've seen some examples of feedback on student work - now, it's your turn! Ima
 
 ::: {}
 ```{r, echo=FALSE, out.extra='style= padding:10px;'}
-knitr::include_graphics("poster1.jpg")
+knitr::include_graphics("poster1.png")
 ```
 :::
 
