@@ -1,48 +1,105 @@
 ---
-title: "Crafting Feedback"
+title: "Cheater Teacher Feedback App"
 ---
 
-You've seen some examples of feedback on student work - now, it's your turn! Imagine you asked to provide feedback on the following piece of work:
+So, you've found some teachers you think are cheaters... this is where you can check how your investigation is going! Import your CSV file to check how many cheats you have found, how many are left to find, and if there are any honest teachers who have been misclassified.
 
-::: {}
-```{r, echo=FALSE, out.extra='style= padding:10px;'}
-knitr::include_graphics("Poster1.png")
-```
-:::
+library(shiny)
 
-Now, drag and drop some feedback! Once you are happy with your creation, take a screenshot of the third column and submit it to this link: X.
+# Define UI for data upload app ----
+ui <- fluidPage(
 
-```{r echo=FALSE}
-library(sortable)
-library(htmltools)
-bucket_list(
-    header = "Drag options from the first two columns into the third and craft some feedback!",
-    add_rank_list(
-      text = "First of all, drag at least one from here...",
-      labels = c("Nice work.", 
-                 "I really appreciate how you gave a fun example.",
-                 "I like how you layed out your poster in clear sections using boxes.",
-                 "I liked your title.",
-                 "Your content is accurate.",
-                 "I noticed you used blue to highlight key words and focus the readers' attention")
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Select a file ----
+      fileInput("file1", "Choose CSV File",
+                multiple = FALSE,
+                accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv")),
+
+      # Horizontal line ----
+      tags$hr(),
+
+      # Input: Checkbox if file has header ----
+      checkboxInput("header", "Header", TRUE),
+
+      # Input: Select separator ----
+      radioButtons("sep", "Separator",
+                   choices = c(Comma = ",",
+                               Semicolon = ";",
+                               Tab = "\t"),
+                   selected = ","),
+
+      # Input: Select quotes ----
+      radioButtons("quote", "Quote",
+                   choices = c(None = "",
+                               "Double Quote" = '"',
+                               "Single Quote" = "'"),
+                   selected = '"'),
+
+      # Horizontal line ----
+      tags$hr(),
+
+      # Input: Select number of rows to display ----
+      radioButtons("disp", "Display",
+                   choices = c(Head = "head",
+                               All = "all"),
+                   selected = "head")
+
     ),
-    add_rank_list(
-      text = "...and at least one from here!",
-      labels = c("Your colours are plain and boring.", 
-                 "There's too much information, too much to read.", 
-                 "The text is too small.", 
-                 "I like your use of blue but also wonder if other colours would help draw the audience's attention?",
-                 "I appreciate all of the knowledge you have shared but feel a more directed focus would have portrayed your point more impactfully.", 
-                 "I wonder if you could have focused on your activity and reduced the written content as I feel the activity is a real strength of your poster.", 
-                 "None.", 
-                 "Randomness isn't an issue and you should have picked a better topic.", 
-                 "Have you actually proofread your poster? Error check!",
-                 "I totally get you have a lot to say and I can see you are really passionate about this topic, but as someone new to these ideas, the wealth of information is a little overwhelming. Have you considered including a link to more information?")
-    ),
-    add_rank_list(
-      text = "Have a go! Create your feedback here:",
-      labels = NULL
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Data file ----
+      tableOutput("contents")
+
     )
-  )
-```
 
+  )
+)
+
+# Define server logic to read selected file ----
+server <- function(input, output) {
+
+  output$contents <- renderTable({
+
+    # input$file1 will be NULL initially. After the user selects
+    # and uploads a file, head of that data file by default,
+    # or all rows if selected, will be shown.
+
+    req(input$file1)
+
+    # when reading semicolon separated files,
+    # having a comma separator causes `read.csv` to error
+    tryCatch(
+      {
+        df <- read.csv(input$file1$datapath,
+                 header = input$header,
+                 sep = input$sep,
+                 quote = input$quote)
+      },
+      error = function(e) {
+        # return a safeError if a parsing error occurs
+        stop(safeError(e))
+      }
+    )
+
+    if(input$disp == "head") {
+      return(head(df))
+    }
+    else {
+      return(df)
+    }
+
+  })
+
+}
+
+# Create Shiny app ----
+shinyApp(ui, server)
