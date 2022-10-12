@@ -1,13 +1,25 @@
 ---
 title: "Cheater Teacher Feedback App"
+output: html_document
+runtime: shiny
 ---
 
 So, you've found some teachers you think are cheaters... this is where you can check how your investigation is going! Import your CSV file to check how many cheats you have found, how many are left to find, and if there are any honest teachers who have been misclassified.
 
-library(shiny)
+```{r echo=FALSE}
+library(sortable)
+library(htmltools)
+```
 
+```{r, echo = FALSE}
+library(shiny)
+shinyApp(
+  
 # Define UI for data upload app ----
 ui <- fluidPage(
+
+  # App title ----
+  titlePanel("Uploading Files"),
 
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
@@ -35,6 +47,13 @@ ui <- fluidPage(
                                Tab = "\t"),
                    selected = ","),
 
+      # Input: Select quotes ----
+      radioButtons("quote", "Quote",
+                   choices = c(None = "",
+                               "Double Quote" = '"',
+                               "Single Quote" = "'"),
+                   selected = '"'),
+
       # Horizontal line ----
       tags$hr(),
 
@@ -54,8 +73,7 @@ ui <- fluidPage(
 
     )
 
-  )
-)
+  )),
 
 # Define server logic to read selected file ----
 server <- function(input, output) {
@@ -91,15 +109,7 @@ server <- function(input, output) {
     }
 
   })
-  
-  output$Conclusion1 <- renderText({
-    
-  if(testanalitico()$p.value < 0.05){mensaje="We reject the null hypothesis, the variable is not normally distributed"}else{mensaje="We keep the null     hypothesis, the variable is normally distributed"}
-  mensaje
-    
-  })
 
 }
-
-# Create Shiny app ----
-shinyApp(ui, server)
+)
+```
