@@ -91,6 +91,13 @@ server <- function(input, output) {
     }
 
   })
+  
+  output$Conclusion1 <- renderText({
+    
+  if(testanalitico()$p.value < 0.05){mensaje="We reject the null hypothesis, the variable is not normally distributed"}else{mensaje="We keep the null     hypothesis, the variable is normally distributed"}
+  mensaje
+    
+  })
 
 }
 
