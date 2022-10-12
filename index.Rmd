@@ -35,13 +35,6 @@ ui <- fluidPage(
                                Tab = "\t"),
                    selected = ","),
 
-      # Input: Select quotes ----
-      radioButtons("quote", "Quote",
-                   choices = c(None = "",
-                               "Double Quote" = '"',
-                               "Single Quote" = "'"),
-                   selected = '"'),
-
       # Horizontal line ----
       tags$hr(),
 
